@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model IEnumerable<EsyaCekilisV3.Web.Areas.Admin.Models.ProductModel>
+@*@model List<AdminModel.ProductModel>*@
+
+<div class="row">
+    <div class="col-md-10 mt-4 ">
+        <h2>Kuponlar</h2>
+    </div>
+
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            
+            <th>Kupon Adı</th>
+            <th>Açıklama</th>
+            <th>Başlangıç Tarihi</th>
+            <th>Bitiş Tarihi</th>
+            <th>Çekiliş Tarihi</th>
+            <th>Kupon Sayısı</th>
+            <th>Fiyat</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                @if (item.EndDate > DateTime.Now)
+                {
+                    <tr>
+                        
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.DrawDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.CouponLimit</td>
+                        <td>@item.Price</td>
+
+
+
+                        <td>
+                            <!-- Satın Alma Butonu -->
+                            @*@using (Html.BeginForm("Buying", "Member"))
+                            {
+                                @Html.Hidden("productId", item.Id)
+                                <input type="submit" value="Satın Al" />
+                            }*@
+                            <input type="button" value="Sepete Ekle" id="btn-@item.Id" onclick="sepeteekle(this)" data-content="@item.ToJson()" />
+                        </td>
+
+
+                    </tr>
+                }
+            }
+        }
+        else
+        {
+            <tr><td align="center" colspan="9">Kupon Yok</td></tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function (event) {
+        var sepet = JSON.parse(localStorage.getItem('sepet') || '[]');
+        console.log('Sepet', sepet)
+        sepet.forEach(function(urun) {
+            var btn = document.getElementById('btn-' + urun.Id)
+            btn.value = 'Sepete Eklendi';
+            btn.disabled = true;
+        })
+    })
+    function sepeteekle(el) {
+        var content = JSON.parse(el.dataset.content);
+        console.log('Eklenen Ürün: ', content);
+        var sepet = JSON.parse(localStorage.getItem('sepet') || '[]');
+        sepet.push(content)
+        localStorage.setItem('sepet', JSON.stringify(sepet));
+        el.value = 'Sepete Eklendi';
+        el.disabled = true;
+        alert('Ürün sepete eklendi!\nÜrün miktarını sepetinizde belirleyebilirsiniz.')
+    }
+</script>

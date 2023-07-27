@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+@model IEnumerable<EsyaCekilisV3.Web.Areas.Admin.Models.ProductModel>
+@*@model List<AdminModel.ProductModel>*@
+
+<div class="row">
+    <div class="col-md-10 mt-4 ">
+        <h2>Kupon Listesi</h2>
+    </div>
+
+    
+
+    <div class="col-md-2 mt-4">
+        <a class="btn btn-dark mt-1" asp-controller="Product" asp-action="createCoupon" asp-route-id="0" asp-area="admin">Kupon Ekle</a>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Yaratıcı</th>
+            <th>Id</th>
+            <th>Kupon Adı</th>
+            <th>Açıklama</th>
+            <th>Başlahgıç Tarihi</th>
+            <th>Bitiş Tarihi</th>
+            <th>Çekiliş Tarihi</th>
+            <th>Kupon Sayısı</th>
+            <th>Fiyat</th>
+            
+        </tr>
+    </thead>
+
+    <tbody>
+       @if (Model.Count()>0)
+       {
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CreatedUser</td>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                <td>@item.DrawDate.ToString("dd/MM/yyyy")</td>
+                <td>@item.CouponLimit</td>
+                <td>@item.Price</td>
+                
+                
+                
+                <td>
+                      <a class="btn btn-outline-dark btn-sm" asp-controller="Product" asp-action="createCoupon"  asp-route-id="@item.Id">Bilgileri Değiştir</a>
+                </td>
+
+                    <td>
+                        @using (Html.BeginForm("deleteCoupon", "Product"))
+                        {
+                            @Html.Hidden("Id", item.Id)
+                            
+                            <input type="submit" class="btn btn-success btn-sm" value="Sil" />
+                        }
+                    </td>
+            </tr>
+            }
+
+        }
+        else
+        {
+           <tr><td align="center" colspan="9">Kupon Yok</td></tr>
+        }
+    </tbody>
+
+
+</table>
+

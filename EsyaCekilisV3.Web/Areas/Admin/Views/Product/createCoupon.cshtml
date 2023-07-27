@@ -1,0 +1,83 @@
+﻿@model EsyaCekilisV3.Web.Areas.Admin.Models.ProductModel
+
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="text-center">
+            <h2>Kupon Oluşturma Alanı</h2>
+        </div>
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+
+
+
+        <form asp-action="createCoupon" method="post">
+
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="CreatedUser" />
+
+            <div class="form-group mt-3">
+                <label asp-for="Name" class="control-label">Kupon İsmi</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Description" class="control-label">Kupon Açıklaması</label>
+                <input  asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="StartDate" class="control-label">Katılım İçin İlk Tarih</label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="EndDate" class="control-label">Katılım İçin Son Tarih</label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="DrawDate" class="control-label">Çekilişin Yapılacağı Tarih</label>
+                <input asp-for="DrawDate" class="form-control" />
+                <span asp-validation-for="DrawDate" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group mt-3">
+                <label asp-for="CouponLimit" class="control-label">Kupon Sayısı</label>
+                <input asp-for="CouponLimit" class="form-control" />
+                <span asp-validation-for="CouponLimit" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <label asp-for="Price" class="control-label">Fiyat(₺)</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Oluştur" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="mt-4">
+            <a asp-action="ProductIndex">Kupon Listesine Geri Dön</a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+ }

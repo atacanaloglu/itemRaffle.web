@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "myproducts";
+}
+
+@model IEnumerable<EsyaCekilisV3.Web.Areas.Admin.Models.ProductModel>
+
+<h1>Kazandıklarım</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+
+            <th>Kupon Adı</th>
+            <th>Açıklama</th>
+            <th>Başlangıç Tarihi</th>
+            <th>Bitiş Tarihi</th>
+            <th>Çekiliş Tarihi</th>
+            <th>Fiyat</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                
+                    <tr>
+
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.DrawDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Price</td>
+                    </tr>
+                
+            }
+        }
+        else
+        {
+            <tr><td align="center" colspan="9">Kupon Yok</td></tr>
+        }
+    </tbody>
+</table>

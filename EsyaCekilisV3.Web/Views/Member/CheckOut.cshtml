@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "Sepetim";
+}
+
+<h1>Sepet</h1>
+
+<table id="tblCheckout" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Kupon Adı</th>
+            <th>Açıklama</th>
+            <th>Kupon Sayısı</th>
+            <th>Fiyat</th>
+            <th>Miktar</th>
+            <th>Toplam</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="5" align="right">Genel Toplam: </th>
+            <th id="genelToplam">0</th>
+        </tr>
+    </tfoot>
+</table>
+<input type="button" value="Alışverişi Tamamla" onclick="checkout()" />
+<form method="post" id="completeCheckout">
+    <input hidden name="request" id="request" />
+</form>
+<script type="text/javascript">
+    function loadFromLocalStorage() {
+        var sepet = JSON.parse(localStorage.getItem('sepet') || '[]');
+        console.log('Sepet', sepet)
+        var tblCheckout = document.getElementById('tblCheckout').getElementsByTagName('tbody')[0];
+
+        console.log('tblCheckout', tblCheckout)
+        if (sepet.length) {
+            var genelToplam = 0;
+            var content = sepet.map(function (urun) {
+                genelToplam += parseInt(urun.Price, 10);
+                return `<tr>
+                                <td>${urun.Name}</td>
+                                <td>${urun.Description}</td>
+                                <td>${urun.CouponLimit}</td>
+                                <td>${urun.Price}</td>
+                                <td><input type="number" class="adet" data-product="${urun.Id}" data-price="${urun.Price}" onchange="miktarchange(this)" value="1" min="1" max="${urun.CouponLimit}"</td>
+                                <td class="toplam">${urun.Price}</td>
+                                <td><input type="button" onclick="removeFromSepet(${urun.Id})" value="Sil" /></td>
+                            </tr>`
+            }).join('')
+            console.log('content', content)
+            tblCheckout.innerHTML = content;
+            document.getElementById('genelToplam').innerHTML = genelToplam;
+        } else {
+            tblCheckout.innerHTML = '<tr><td colspan="6">Sepetiniz boştur!</td></tr>'
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function (event) {
+        loadFromLocalStorage()
+    })
+    function miktarchange(el) {
+        var price = parseInt(el.dataset.price, 10);
+        var miktar = parseInt(el.value, 10);
+        el.parentElement.nextSibling.innerHTML = price * miktar; 
+        var toplam = 0;
+        document.querySelectorAll('.toplam').forEach(function (fiyat) {
+            toplam += parseInt(fiyat.innerHTML, 10);
+        })
+        document.getElementById('genelToplam').innerHTML = toplam;
+    }
+    function removeFromSepet(id) {
+        var sepet = JSON.parse(localStorage.getItem('sepet') || '[]').filter(function (product) {
+            return product.Id != id;
+        });
+        localStorage.setItem('sepet', JSON.stringify(sepet))
+        loadFromLocalStorage()
+    }
+
+    function checkout() {
+        var urunler = [];
+        document.querySelectorAll('.adet').forEach(function(urun) {
+            var adet = urun.value;
+            var product = urun.dataset.product;
+            for(var i=0; i < parseInt(adet, 10); i++) {
+                urunler.push(product);
+            }
+        })
+        console.log('Ürünler', urunler)
+        localStorage.removeItem('sepet')
+        document.getElementById('request').value = urunler;
+        document.getElementById('completeCheckout').submit()
+    }
+</script>
+
